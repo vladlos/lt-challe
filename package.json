@@ -17,6 +17,7 @@
     "@remix-run/node": "^2.9.2",
     "@remix-run/react": "^2.9.2",
     "@remix-run/serve": "^2.9.2",
+    "@vercel/remix": "^2.9.2-patch.2",
     "bcryptjs": "^2.4.3",
     "classnames": "^2.5.1",
     "date-fns": "^3.6.0",
