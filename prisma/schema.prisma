@@ -1,0 +1,45 @@
+datasource db {
+  provider = "mongodb"
+  url      = "mongodb+srv://carrott9:dc224N33RUj2FtDD@cluster0.qhh93vv.mongodb.net/dev?retryWrites=true&w=majority&appName=Cluster0"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  email     String    @unique
+  password  String
+  createdAt DateTime  @default(now())
+  lotties   Lottie[]
+  messages  Message[]
+}
+
+model Lottie {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  name      String
+  data      String
+  createdAt DateTime @default(now())
+  chat      Chat?
+}
+
+model Chat {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  lottieId  String    @unique @db.ObjectId
+  lottie    Lottie    @relation(fields: [lottieId], references: [id])
+  messages  Message[]
+  createdAt DateTime  @default(now())
+}
+
+model Message {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  chatId    String   @db.ObjectId
+  chat      Chat     @relation(fields: [chatId], references: [id])
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  content   String
+  createdAt DateTime @default(now())
+}
