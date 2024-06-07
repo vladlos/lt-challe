@@ -13,6 +13,7 @@ import ColorInput from "~/components/ColorInput";
 
 import CodeBlock from "~/components/CodeBlock";
 import LottiePlayerWithControls from "~/components/LottiePlayerWithControls";
+import LottieEditor from "~/components/LottieEditor";
 
 type LoaderData = {
   lottie: Lottie;
@@ -39,7 +40,7 @@ export default function SingleLottie() {
   let { lottie } = useLoaderData<LoaderData>();
 
   return (
-    <div className="flex gap-4 pt-4">
+    <div className="flex gap-4 pt-4 max-h-[calc(100vh-80px)]">
       <Card className="w-1/4">
         <Outlet />
       </Card>
@@ -50,8 +51,7 @@ export default function SingleLottie() {
       </Card>
       <Card className="w-1/4">
         <h2 className="text-xl font-semibold mb-4">Adjust Animation</h2>
-
-        {/* <pre>{data}</pre> */}
+        <LottieEditor data={lottie.data} />
       </Card>
     </div>
   );

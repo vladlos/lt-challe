@@ -59,7 +59,7 @@ export default function Index() {
   });
 
   async function loadMore() {
-    let res = await fetch(`/api/lotties?page=${page + 1}`);
+    let res = await fetch(`/api/load-more?page=${page + 1}`);
     let newLotties = await res.json();
     setLotties([...lotties, ...newLotties]);
     setPage(page + 1);

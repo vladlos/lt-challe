@@ -11,9 +11,9 @@ import eventEmitter from "~/.server/eventEmitter";
 import { authenticator } from "~/.server/auth";
 
 import Button from "~/components/Button";
-import Card from "~/components/Card";
 import Input from "~/components/Input";
 import { Message } from "@prisma/client";
+import { format } from "date-fns";
 
 type LoaderData = {
   messages: Message[];
@@ -116,17 +116,24 @@ export default function Chat() {
     };
   }, [lottieId]);
   return (
-    <>
-      <h1 className="text-2xl font-bold mb-6">Chat</h1>
-      {messages.map((message) => (
-        <p key={message.id}>
-          <strong>{message.user.email}:</strong> {message.content}
-        </p>
-      ))}
+    <div className="flex flex-col h-full">
+      <h1 className="text-2xl font-bold mb-4">Chat</h1>
+      <div className="flex-1 overflow-y-auto">
+        {messages.map((message) => (
+          <div className="bg-gray-100 rounded-md mb-2 p-2" key={message.id}>
+            <div className="text-gray-500 text-sm">
+              {message.user.email} at{" "}
+              {format(new Date(message.createdAt), "MM/dd/yyyy hh:mm")}
+            </div>
+            {message.content}
+          </div>
+        ))}
+      </div>
+
       <Form method="post">
-        <Input label="Message" type="text" name="message" />
+        <Input type="text" name="message" placeholder="comment.." />
         <Button type="submit">Send</Button>
       </Form>
-    </>
+    </div>
   );
 }
