@@ -3,19 +3,7 @@ import Collapse from "./Collapse";
 import Input from "./Input";
 import ColorInput from "./ColorInput";
 import { useForm, Controller, useWatch } from "react-hook-form";
-
-const lottieColorToHEX = (color) => {
-  const rgb = color?.map((c) => Math.round(c * 255));
-  return "#" + rgb.map((c) => c.toString(16).padStart(2, "0")).join("");
-};
-
-const HEXToLottieColor = (color) => {
-  const hex = color.replace("#", "");
-  const r = parseInt(hex.substring(0, 2), 16) / 255;
-  const g = parseInt(hex.substring(2, 4), 16) / 255;
-  const b = parseInt(hex.substring(4, 6), 16) / 255;
-  return [r, g, b];
-};
+import { lottieColorToHEX, HEXToLottieColor } from "~/utils/colorUtils";
 
 const LottieEditor = ({ data, onUpdate }) => {
   const dataObj = JSON.parse(data || "{}");
@@ -69,29 +57,26 @@ const LottieEditor = ({ data, onUpdate }) => {
     />
   );
 
+  const renderItems = (items, path) => {
+    return items?.map((item, index) => {
+      const itemPath = `${path}.${index}`;
+      return (
+        (item.c || item.it) && (
+          <Collapse title={item.nm || `Item ${index}`} key={itemPath}>
+            {item.c && (
+              <>{renderColorInputField(`${itemPath}.c.k`, "Item Color")}</>
+            )}
+            {item.it && renderItems(item.it, `${itemPath}.it`)}
+          </Collapse>
+        )
+      );
+    });
+  };
+
   const renderLayerShapes = (layer, layerIndex) =>
     layer.shapes?.map((shape, shapeIndex) => (
       <Collapse title={shape.nm} key={shapeIndex}>
-        {renderInputField(
-          `layers.${layerIndex}.shapes.${shapeIndex}.nm`,
-          "Shape Name"
-        )}
-        {shape.it?.map((item, itemIndex) => (
-          <Collapse title={item.nm} key={itemIndex}>
-            {item.c && (
-              <>
-                {renderInputField(
-                  `layers.${layerIndex}.shapes.${shapeIndex}.it.${itemIndex}.c.a`,
-                  "Opacity"
-                )}
-                {renderColorInputField(
-                  `layers.${layerIndex}.shapes.${shapeIndex}.it.${itemIndex}.c.k`,
-                  "Item Color"
-                )}
-              </>
-            )}
-          </Collapse>
-        ))}
+        {renderItems(shape.it, `layers.${layerIndex}.shapes.${shapeIndex}.it`)}
       </Collapse>
     ));
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import Input from "~/components/Input";
 import Button from "~/components/Button";
@@ -17,25 +17,40 @@ const LottiePlayerWithControls: React.FC<{ data: string }> = ({ data }) => {
   };
 
   function play() {
-    if (dotLottie) {
-      setIsPlaying(true);
-      dotLottie.play();
-    }
+    dotLottie?.play();
   }
 
   function pause() {
-    if (dotLottie) {
-      setIsPlaying(false);
-      dotLottie.pause();
-    }
+    dotLottie?.pause();
   }
 
   function stop() {
-    if (dotLottie) {
-      setIsPlaying(false);
-      dotLottie.stop();
-    }
+    dotLottie?.stop();
   }
+
+  useEffect(() => {
+    function onPlay() {
+      setIsPlaying(true);
+    }
+
+    function onPause() {
+      setIsPlaying(false);
+    }
+
+    if (dotLottie) {
+      dotLottie.addEventListener("play", onPlay);
+      dotLottie.addEventListener("pause", onPause);
+      dotLottie.addEventListener("stop", onPause);
+    }
+
+    return () => {
+      if (dotLottie) {
+        dotLottie.addEventListener("play", onPlay);
+        dotLottie.addEventListener("pause", onPause);
+        dotLottie.addEventListener("stop", onPause);
+      }
+    };
+  }, [dotLottie]);
 
   const handleSpeedChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSpeed(parseFloat(event.target.value));

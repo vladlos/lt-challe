@@ -1,15 +1,12 @@
 import React, { ReactElement, useEffect } from "react";
-import { format } from "date-fns";
-import { Data, DotLottieReact } from "@lottiefiles/dotlottie-react";
-import { Lottie } from "@prisma/client";
-import Card from "./Card";
 
 type CarouselProps = {
   items: ReactElement[];
   loadMore?: () => void;
+  id: string;
 };
 
-const Carousel: React.FC<CarouselProps> = ({ items, loadMore }) => {
+const Carousel: React.FC<CarouselProps> = ({ items, loadMore, id }) => {
   useEffect(() => {
     let observer = new IntersectionObserver(
       (entries) => {
@@ -21,7 +18,7 @@ const Carousel: React.FC<CarouselProps> = ({ items, loadMore }) => {
       { threshold: 1.0 }
     );
 
-    let sentinel = document.querySelector("#sentinel");
+    let sentinel = document.querySelector("#" + id);
     if (sentinel) {
       observer.observe(sentinel);
     }
@@ -32,14 +29,14 @@ const Carousel: React.FC<CarouselProps> = ({ items, loadMore }) => {
       }
     };
   }, []);
-
+  //[mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-128px),transparent_100%)]
   return (
-    <div className="w-full inline-flex flex-nowrap overflow-scroll [mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-128px),transparent_100%)]">
+    <div className="w-full inline-flex flex-nowrap overflow-scroll">
       <ul className="flex items-center justify-center gap-6">
         {items.map((item, key) => (
           <li key={key}>{item}</li>
         ))}
-        <li key="sentinel" id="sentinel" className="h-10"></li>
+        <li key={id} id={id} className="h-10"></li>
       </ul>
     </div>
   );

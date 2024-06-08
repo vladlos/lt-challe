@@ -13,12 +13,12 @@ const Collapse: React.FC<CollapseProps> = ({ title, children }) => {
   };
 
   return (
-    <div className="border rounded mb-4">
+    <div className="border rounded mb-2">
       <div
-        className="flex items-center justify-between px-3 py-2 cursor-pointer"
+        className="flex items-center justify-between px-2 py-1 cursor-pointer"
         onClick={toggleCollapse}
       >
-        <h2 className="text-lg font-medium">{title}</h2>
+        <h2 className="text-sm lowercase font-mono">{title}</h2>
         <svg
           className={`w-6 h-6 transition-transform ${
             isOpen ? "transform rotate-180" : ""
@@ -33,7 +33,7 @@ const Collapse: React.FC<CollapseProps> = ({ title, children }) => {
           <path d="M19 9l-7 7-7-7" />
         </svg>
       </div>
-      {isOpen && <div className="p-3 pt-0">{children}</div>}
+      {isOpen && <div className="px-2">{children}</div>}
     </div>
   );
 };

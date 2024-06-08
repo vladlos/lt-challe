@@ -1,8 +1,9 @@
 import React from "react";
 import { Link } from "@remix-run/react";
+import { Lottie } from "@prisma/client";
 
 type LottieListProps = {
-  lotties: { id: string; name: string; createdAt: string }[];
+  lotties: Lottie[];
 };
 
 const LottieList: React.FC<LottieListProps> = ({ lotties }) => {
