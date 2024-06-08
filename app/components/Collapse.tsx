@@ -13,7 +13,7 @@ const Collapse: React.FC<CollapseProps> = ({ title, children }) => {
   };
 
   return (
-    <div className="border rounded">
+    <div className="border rounded mb-4">
       <div
         className="flex items-center justify-between px-3 py-2 cursor-pointer"
         onClick={toggleCollapse}

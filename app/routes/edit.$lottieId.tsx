@@ -3,15 +3,8 @@ import { LoaderFunction, json } from "@remix-run/node";
 import { useLoaderData, Outlet } from "@remix-run/react";
 import { prisma } from "~/.server/db";
 import { authenticator } from "~/.server/auth";
-import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { Lottie } from "@prisma/client";
 import Card from "~/components/Card";
-import Input from "~/components/Input";
-import { format } from "date-fns";
-import Button from "~/components/Button";
-import ColorInput from "~/components/ColorInput";
-
-import CodeBlock from "~/components/CodeBlock";
 import LottiePlayerWithControls from "~/components/LottiePlayerWithControls";
 import LottieEditor from "~/components/LottieEditor";
 
@@ -38,6 +31,7 @@ export let loader: LoaderFunction = async ({ request, params }) => {
 
 export default function SingleLottie() {
   let { lottie } = useLoaderData<LoaderData>();
+  const [data, setData] = useState(lottie.data);
 
   return (
     <div className="flex gap-4 pt-4 max-h-[calc(100vh-80px)]">
@@ -47,11 +41,16 @@ export default function SingleLottie() {
 
       <Card className="w-1/2">
         <h1 className="text-2xl font-bold mb-4">{lottie.name}</h1>
-        <LottiePlayerWithControls data={lottie.data} />
+        <LottiePlayerWithControls data={data} />
       </Card>
-      <Card className="w-1/4">
+      <Card className="w-1/4 overflow-y-auto">
         <h2 className="text-xl font-semibold mb-4">Adjust Animation</h2>
-        <LottieEditor data={lottie.data} />
+        <LottieEditor
+          data={data}
+          onUpdate={(newData) => {
+            setData(newData);
+          }}
+        />
       </Card>
     </div>
   );
