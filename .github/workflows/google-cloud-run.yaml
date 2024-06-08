@@ -27,8 +27,8 @@ jobs:
 
     - name: Deploy to Cloud Run
       run: |
-        gcloud run deploy getactions.APP_NAME \
-        --region getactions.GCP_REGION \
+        gcloud run deploy lottie-challenge \
+        --region europe-west1 \
         --source . \
         --allow-unauthenticated
 
