@@ -29,7 +29,7 @@ model Lottie {
 model Chat {
   id        String    @id @default(auto()) @map("_id") @db.ObjectId
   lottieId  String    @unique @db.ObjectId
-  lottie    Lottie    @relation(fields: [lottieId], references: [id])
+  lottie    Lottie    @relation(fields: [lottieId], references: [id], onDelete: Cascade)
   messages  Message[]
   createdAt DateTime  @default(now())
 }
@@ -37,7 +37,7 @@ model Chat {
 model Message {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   chatId    String   @db.ObjectId
-  chat      Chat     @relation(fields: [chatId], references: [id])
+  chat      Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
   userId    String   @db.ObjectId
   user      User     @relation(fields: [userId], references: [id])
   content   String

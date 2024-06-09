@@ -1,4 +1,4 @@
-import { ActionFunction, LoaderFunction, redirect } from "@remix-run/node";
+import { ActionFunction, redirect } from "@remix-run/node";
 import { useActionData, Form } from "@remix-run/react";
 
 import { registerUser } from "~/.server/auth";

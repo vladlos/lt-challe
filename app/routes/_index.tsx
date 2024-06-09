@@ -1,18 +1,13 @@
-import {
-  ActionFunction,
-  LoaderFunction,
-  json,
-  redirect,
-} from "@remix-run/node";
-
-import { Form, Link, useLoaderData } from "@remix-run/react";
-import { prisma } from "~/.server/db";
 import { useState } from "react";
+import { LoaderFunction, json } from "@remix-run/node";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+
+import { Link, useLoaderData } from "@remix-run/react";
+import { prisma } from "~/.server/db";
+
 import Carousel from "~/components/Carousel";
 import { Lottie } from "@prisma/client";
-import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import LottieCard from "~/components/LottieCard";
-import { authenticator } from "~/.server/auth";
 import FeaturedCarousel from "~/components/FeaturedCarousel";
 import Button from "~/components/Button";
 import { AdjustmentsVerticalIcon } from "@heroicons/react/24/outline";

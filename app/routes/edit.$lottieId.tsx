@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from "react";
-import {
-  ActionFunction,
-  LoaderFunction,
-  json,
-  redirect,
-} from "@remix-run/node";
-import { useLoaderData, Outlet, useFetcher } from "@remix-run/react";
+import { ActionFunction, LoaderFunction, json } from "@remix-run/node";
+import { useLoaderData, Outlet } from "@remix-run/react";
 
 import { prisma } from "~/.server/db";
 import { authenticator } from "~/.server/auth";
@@ -65,46 +60,21 @@ export let action: ActionFunction = async ({ request, params }) => {
   return json({ ok: true });
 };
 
-function getObjectDiff(obj1, obj2) {
-  const diff = Object.keys(obj1).reduce((result, key) => {
-    if (!obj2.hasOwnProperty(key)) {
-      result.push(key);
-    } else if (_.isEqual(obj1[key], obj2[key])) {
-      const resultKeyIndex = result.indexOf(key);
-      result.splice(resultKeyIndex, 1);
-    }
-    return result;
-  }, Object.keys(obj2));
-
-  return diff;
-}
-
 export default function SingleLottie() {
   let { lottie } = useLoaderData<LoaderData>();
   const [data, setData] = useState(JSON.parse(lottie.data));
   const fetcher = useDebounceFetcher();
 
-  console.log("SINGLE LOTTIE RENDER");
-
   useEffect(() => {
     const eventSource = new EventSource(`/edit/${lottie.id}/sse`);
-
-    eventSource.onopen = () => {
-      console.log("SSE connection opened");
-    };
-
-    eventSource.onerror = (error) => {
-      console.error("SSE error:", error);
-    };
 
     eventSource.onmessage = (event) => {
       try {
         const newLottie = JSON.parse(event.data);
         const newData = JSON.parse(newLottie.data);
-        console.log("ON MESSAGE", newData);
-        // if (!_.isEqual(data, newData)) {
-        setData(newData);
-        // }
+        if (!_.isEqual(data, newData)) {
+          setData(newData);
+        }
       } catch (e) {
         console.log(e);
       }
@@ -112,15 +82,11 @@ export default function SingleLottie() {
 
     return () => {
       eventSource.close();
-      console.log("SSE connection closed");
     };
   }, [lottie.id]);
 
   const handleUpdate = (newData: any) => {
-    console.log("HANDLE UPDATE");
     if (!_.isEqual(data, newData)) {
-      console.log("not equal - SETTING DATA");
-      console.log(getObjectDiff(data, newData));
       setData(newData);
       try {
         fetcher.submit(

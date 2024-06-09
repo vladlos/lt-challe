@@ -12,7 +12,6 @@ const Carousel: React.FC<CarouselProps> = ({ items, loadMore, id }) => {
       (entries) => {
         if (entries[0].isIntersecting) {
           loadMore && loadMore();
-          console.log("LOAD MORE");
         }
       },
       { threshold: 1.0 }
@@ -29,7 +28,7 @@ const Carousel: React.FC<CarouselProps> = ({ items, loadMore, id }) => {
       }
     };
   }, []);
-  //[mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-128px),transparent_100%)]
+
   return (
     <div className="w-full inline-flex flex-nowrap overflow-scroll">
       <ul className="flex items-center justify-center gap-6">

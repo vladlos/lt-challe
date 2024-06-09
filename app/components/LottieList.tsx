@@ -4,9 +4,10 @@ import { Lottie } from "@prisma/client";
 
 type LottieListProps = {
   lotties: Lottie[];
+  actions?: (id) => React.ReactNode;
 };
 
-const LottieList: React.FC<LottieListProps> = ({ lotties }) => {
+const LottieList: React.FC<LottieListProps> = ({ lotties, actions }) => {
   return (
     <ul className="mb-4">
       {lotties.map((lottie) => (
@@ -20,6 +21,7 @@ const LottieList: React.FC<LottieListProps> = ({ lotties }) => {
             </Link>
             <span className="text-sm text-gray-500">
               {new Date(lottie.createdAt).toLocaleDateString()}
+              {actions && actions(lottie.id)}
             </span>
           </div>
         </li>

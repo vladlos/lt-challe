@@ -20,7 +20,9 @@ const LottieCard: React.FC<LottieCardProps> = ({
   return (
     <Card className="w-[350px]">
       <h3 className="text-sm text-gray-500">owner: {owner}</h3>
-      <h2 className="text-lg font-bold mb-2">{name}</h2>
+      <h2 className="text-lg font-bold mb-2 text-ellipsis text-nowrap overflow-hidden">
+        {name}
+      </h2>
       <div className="h-40">{children}</div>
       <div className="flex justify-between items-center">
         <span className="text-sm text-gray-500">

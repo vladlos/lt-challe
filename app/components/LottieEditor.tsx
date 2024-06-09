@@ -26,14 +26,13 @@ const LottieEditor: React.FC<LottieEditorProps> = ({ data, onUpdate }) => {
   useEffect(() => {
     if (isResetting.current) {
       // Skip the first onUpdate call after resetting
-      console.log("Skipping onUpdate");
       isResetting.current = false;
     } else if (onUpdate && !_.isEqual(watchedValues, data)) {
       onUpdate(watchedValues);
     }
   }, [watchedValues, onUpdate, data]);
 
-  const renderInputField = (name, label, type = "text", min, max) => (
+  const renderInputField = (name, label, type, min, max) => (
     <Controller
       name={name}
       control={control}

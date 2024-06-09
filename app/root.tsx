@@ -33,7 +33,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <div className="bg-gray-100 min-h-screen">
+        <div className="bg-gray-100 min-h-screen pb-4">
           <Navbar user={user} />
           <div className="container mx-auto min-h-fit">{children}</div>
         </div>

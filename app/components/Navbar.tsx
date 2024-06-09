@@ -14,25 +14,28 @@ export default function Navbar({ user }: NavBarProps) {
         <div>
           {user ? (
             <>
-              <Link to="/" className="text-white mr-4">
+              <Link to="/" className="text-white hover:underline mr-4">
                 All Lotties
               </Link>
-              <Link to="/my-lotties" className="text-white mr-10">
+              <Link
+                to="/my-lotties"
+                className="text-white hover:underline mr-10"
+              >
                 My Lotties
               </Link>
               <span className="text-white mr-1">Hello, {user.email}</span>
               <form action="/logout" method="post" className="inline">
-                <button type="submit" className="text-white">
+                <button type="submit" className="text-white hover:underline">
                   (Sign Out)
                 </button>
               </form>
             </>
           ) : (
             <>
-              <Link to="/login" className="text-white mr-4">
+              <Link to="/login" className="text-white hover:underline mr-4">
                 Sign In
               </Link>
-              <Link to="/signup" className="text-white">
+              <Link to="/signup" className="text-white hover:underline">
                 Sign Up
               </Link>
             </>

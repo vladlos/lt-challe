@@ -1,13 +1,6 @@
-import {
-  ActionFunction,
-  LoaderFunction,
-  json,
-  redirect,
-} from "@remix-run/node";
+import { ActionFunction, json, redirect } from "@remix-run/node";
 import { authenticator } from "~/.server/auth";
 import { prisma } from "~/.server/db";
-
-const per_page = 5;
 
 export let action: ActionFunction = async ({ request }) => {
   let user = await authenticator.isAuthenticated(request, {
