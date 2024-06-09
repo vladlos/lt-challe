@@ -3,6 +3,8 @@ import Carousel from "./Carousel";
 import { useQuery } from "@apollo/client/react/hooks/useQuery";
 import { gql } from "@apollo/client/core";
 import LottieCard from "./LottieCard";
+import Button from "./Button";
+import { ArrowUpOnSquareStackIcon } from "@heroicons/react/24/outline";
 
 const GET_FEATURED_ANIMATIONS = gql`
   query FeaturedPublicAnimations($first: Int, $after: String) {
@@ -39,15 +41,13 @@ export default function FeaturedCarousel() {
   );
 
   const loadMoreFeatured = () => {
-    console.log(
-      "Loading more featured animations",
-      data.featuredPublicAnimations.pageInfo.hasNextPage
-    );
-    if (data.featuredPublicAnimations.pageInfo.has.hasNextPage) {
+    const { hasNextPage, endCursor } = data.featuredPublicAnimations.pageInfo;
+    console.log("Loading more featured animations, hasNextPage:", hasNextPage);
+    if (hasNextPage) {
       fetchMore({
         variables: {
           first: 5,
-          after: data.featuredPublicAnimations.pageInfo.endCursor,
+          after: endCursor,
         },
         updateQuery: (prevResult, { fetchMoreResult }) => {
           if (!fetchMoreResult) return prevResult;
@@ -81,15 +81,19 @@ export default function FeaturedCarousel() {
             <LottieCard
               name={name}
               createdAt={createdAt}
+              owner="LottieFiles"
               action={
                 <Form method="post" action="/api/import-featured">
                   <input type="hidden" name="name" value={name} />
                   <input type="hidden" name="jsonUrl" value={jsonUrl} />
-                  <button type="submit">Add to My Lotties</button>
+                  <Button small type="submit">
+                    Export
+                    <ArrowUpOnSquareStackIcon className="size-5 ml-1" />
+                  </Button>
                 </Form>
               }
             >
-              <video className="h-40 w-full" autoPlay loop>
+              <video className="h-40 w-full" autoPlay muted loop>
                 <source src={videoUrl} type="video/mp4" />
               </video>
             </LottieCard>

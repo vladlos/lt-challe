@@ -14,16 +14,18 @@ export let loader: LoaderFunction = async ({ request, params }) => {
     new ReadableStream({
       async start(controller) {
         const encoder = new TextEncoder();
-        
+
         const sendMessages = async () => {
           try {
             const messages = await prisma.message.findMany({
               where: { chat: { lottieId } },
               include: { user: true },
-              orderBy: { createdAt: "asc" },
+              orderBy: { createdAt: "desc" },
             });
             console.log("MESSAGES:", messages.length);
-            controller.enqueue(encoder.encode(`data: ${JSON.stringify(messages)}\n\n`));
+            controller.enqueue(
+              encoder.encode(`data: ${JSON.stringify(messages)}\n\n`)
+            );
           } catch (error) {
             console.error("Error fetching messages:", error);
             controller.error(error);

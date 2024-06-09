@@ -57,7 +57,7 @@ export let action: ActionFunction = async ({ request }) => {
 };
 
 export default function MyLotties() {
-  let { user, lotties } = useLoaderData<LoaderData>();
+  let { lotties } = useLoaderData<LoaderData>();
   let actionData = useActionData<{ error?: string }>();
 
   return (

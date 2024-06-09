@@ -64,7 +64,7 @@ const LottiePlayerWithControls: React.FC<{ data: string }> = ({ data }) => {
     <div>
       <DotLottieReact
         dotLottieRefCallback={dotLottieRefCallback}
-        data={data}
+        data={JSON.stringify(data)}
         loop={true}
         speed={speed}
         backgroundColor={color}

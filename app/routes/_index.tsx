@@ -5,7 +5,7 @@ import {
   redirect,
 } from "@remix-run/node";
 
-import { Form, useLoaderData } from "@remix-run/react";
+import { Form, Link, useLoaderData } from "@remix-run/react";
 import { prisma } from "~/.server/db";
 import { useState } from "react";
 import Carousel from "~/components/Carousel";
@@ -14,6 +14,8 @@ import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import LottieCard from "~/components/LottieCard";
 import { authenticator } from "~/.server/auth";
 import FeaturedCarousel from "~/components/FeaturedCarousel";
+import Button from "~/components/Button";
+import { AdjustmentsVerticalIcon } from "@heroicons/react/24/outline";
 
 type LoaderData = {
   initialLotties: Lottie[];
@@ -23,43 +25,12 @@ export let loader: LoaderFunction = async () => {
   let lotties = await prisma.lottie.findMany({
     orderBy: { createdAt: "desc" },
     take: 5,
-  });
-
-  return json({ initialLotties: lotties });
-};
-
-export let action: ActionFunction = async ({ request }) => {
-  let user = await authenticator.isAuthenticated(request, {
-    failureRedirect: "/login",
-  });
-
-  const formData = await request.formData();
-  const name = formData.get("name");
-  const jsonUrl = formData.get("jsonUrl");
-
-  if (typeof name !== "string" || typeof jsonUrl !== "string") {
-    return json({ error: "Invalid form data" }, { status: 400 });
-  }
-
-  // Fetch the JSON data from the URL
-  const response = await fetch(jsonUrl);
-  if (!response.ok) {
-    return json({ error: "Failed to fetch JSON data" }, { status: 500 });
-  }
-
-  const data = await response.json();
-
-  // Save the fetched JSON data to your Prisma database
-  const newLottie = await prisma.lottie.create({
-    data: {
-      name,
-      data,
-      userId: user.id,
+    include: {
+      user: true,
     },
   });
 
-  // Redirect the user to the edit page
-  return redirect(`/edit/${newLottie.id}/chat`);
+  return json({ initialLotties: lotties });
 };
 
 export default function Index() {
@@ -80,8 +51,20 @@ export default function Index() {
       <Carousel
         id={"latest-lotties"}
         items={lotties.map((lottie) => (
-          <LottieCard name={lottie.name} createdAt={lottie.createdAt}>
-            <DotLottieReact data={lottie.data} loop={true} />
+          <LottieCard
+            name={lottie.name}
+            createdAt={lottie.createdAt}
+            owner={lottie.user?.email}
+            action={
+              <Link to={`/edit/${lottie.id}/chat`}>
+                <Button small>
+                  Edit
+                  <AdjustmentsVerticalIcon className="size-5 ml-1" />
+                </Button>
+              </Link>
+            }
+          >
+            <DotLottieReact data={lottie.data} autoplay loop={true} />
           </LottieCard>
         ))}
         loadMore={loadMore}

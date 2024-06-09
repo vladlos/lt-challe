@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ActionFunction,
   LoaderFunction,
@@ -14,6 +14,8 @@ import Card from "~/components/Card";
 import LottiePlayerWithControls from "~/components/LottiePlayerWithControls";
 import LottieEditor from "~/components/LottieEditor";
 import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher";
+import eventEmitter from "~/.server/eventEmitter";
+import _ from "lodash";
 
 type LoaderData = {
   lottie: Lottie;
@@ -24,7 +26,7 @@ export let loader: LoaderFunction = async ({ request, params }) => {
     failureRedirect: "/login",
   });
 
-  let lottie = await prisma.lottie.findUnique({
+  const lottie = await prisma.lottie.findUnique({
     where: { id: params.lottieId },
     select: { id: true, name: true, data: true, createdAt: true },
   });
@@ -37,6 +39,7 @@ export let loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export let action: ActionFunction = async ({ request, params }) => {
+  console.log("ACTION");
   let user = await authenticator.isAuthenticated(request, {
     failureRedirect: "/login",
   });
@@ -53,24 +56,75 @@ export let action: ActionFunction = async ({ request, params }) => {
       where: { id: params.lottieId },
       data: { data },
     });
+    eventEmitter.emit(`updateLottie:${params.lottieId}`);
   } catch (error) {
     console.log(error);
+    return json({ error: "Error updating" }, { status: 400 });
   }
 
-  return null;
+  return json({ ok: true });
 };
+
+function getObjectDiff(obj1, obj2) {
+  const diff = Object.keys(obj1).reduce((result, key) => {
+    if (!obj2.hasOwnProperty(key)) {
+      result.push(key);
+    } else if (_.isEqual(obj1[key], obj2[key])) {
+      const resultKeyIndex = result.indexOf(key);
+      result.splice(resultKeyIndex, 1);
+    }
+    return result;
+  }, Object.keys(obj2));
+
+  return diff;
+}
 
 export default function SingleLottie() {
   let { lottie } = useLoaderData<LoaderData>();
-  const [data, setData] = useState(lottie.data);
+  const [data, setData] = useState(JSON.parse(lottie.data));
   const fetcher = useDebounceFetcher();
 
-  const handleUpdate = (newData: string) => {
-    if (newData !== data) {
+  console.log("SINGLE LOTTIE RENDER");
+
+  useEffect(() => {
+    const eventSource = new EventSource(`/edit/${lottie.id}/sse`);
+
+    eventSource.onopen = () => {
+      console.log("SSE connection opened");
+    };
+
+    eventSource.onerror = (error) => {
+      console.error("SSE error:", error);
+    };
+
+    eventSource.onmessage = (event) => {
+      try {
+        const newLottie = JSON.parse(event.data);
+        const newData = JSON.parse(newLottie.data);
+        console.log("ON MESSAGE", newData);
+        // if (!_.isEqual(data, newData)) {
+        setData(newData);
+        // }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
+    return () => {
+      eventSource.close();
+      console.log("SSE connection closed");
+    };
+  }, [lottie.id]);
+
+  const handleUpdate = (newData: any) => {
+    console.log("HANDLE UPDATE");
+    if (!_.isEqual(data, newData)) {
+      console.log("not equal - SETTING DATA");
+      console.log(getObjectDiff(data, newData));
       setData(newData);
       try {
         fetcher.submit(
-          { data: newData },
+          { data: JSON.stringify(newData) },
           {
             method: "post",
             action: `/edit/${lottie.id}`,
@@ -84,7 +138,7 @@ export default function SingleLottie() {
   };
 
   return (
-    <div className="flex gap-4 pt-4 max-h-[calc(100vh-80px)]">
+    <div className="flex gap-4 py-4 min-h-[calc(100vh-100px)]">
       <Card className="w-1/4">
         <Outlet />
       </Card>

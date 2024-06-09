@@ -10,6 +10,9 @@ export let loader: LoaderFunction = async ({ request }) => {
     orderBy: { createdAt: "asc" },
     skip: (page - 1) * per_page,
     take: per_page,
+    include: {
+      user: true,
+    },
   });
 
   return json(lotties);

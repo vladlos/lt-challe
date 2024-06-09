@@ -5,15 +5,26 @@ interface CollapseProps {
   children: React.ReactNode;
 }
 
+const generateRandomColor = (): number[] => {
+  const red = Math.floor(Math.random() * 256);
+  const green = Math.floor(Math.random() * 256);
+  const blue = Math.floor(Math.random() * 256);
+  return [red, green, blue];
+};
+
 const Collapse: React.FC<CollapseProps> = ({ title, children }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [randomColor] = useState(generateRandomColor());
 
   const toggleCollapse = () => {
     setIsOpen(!isOpen);
   };
 
   return (
-    <div className="border rounded mb-2">
+    <div
+      className="border rounded mb-2"
+      style={{ backgroundColor: `rgba(${randomColor}, 0.2)` }}
+    >
       <div
         className="flex items-center justify-between px-2 py-1 cursor-pointer"
         onClick={toggleCollapse}

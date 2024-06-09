@@ -14,34 +14,33 @@ export let loader: LoaderFunction = async ({ request, params }) => {
     new ReadableStream({
       async start(controller) {
         const encoder = new TextEncoder();
-        
-        const sendMessages = async () => {
+
+        const sendLottie = async () => {
+          console.log("SENDING LOTTIE");
           try {
-            const messages = await prisma.message.findMany({
-              where: { chat: { lottieId } },
-              include: { user: true },
-              orderBy: { createdAt: "asc" },
+            const lottie = await prisma.lottie.findUnique({
+              where: { id: params.lottieId },
+              select: { id: true, name: true, data: true, createdAt: true },
             });
-            console.log("MESSAGES:", messages.length);
-            controller.enqueue(encoder.encode(`data: ${JSON.stringify(messages)}\n\n`));
+
+            controller.enqueue(
+              encoder.encode(`data: ${JSON.stringify(lottie)}\n\n`)
+            );
           } catch (error) {
-            console.error("Error fetching messages:", error);
+            console.error("Error fetching lottie:", error);
             controller.error(error);
           }
         };
 
-        // Send initial messages
-        await sendMessages();
-
-        const onNewMessage = async () => {
-          await sendMessages();
+        const onLottieUpdate = async () => {
+          await sendLottie();
         };
 
-        eventEmitter.on(`newMessage:${lottieId}`, onNewMessage);
+        eventEmitter.on(`updateLottie:${lottieId}`, onLottieUpdate);
 
         request.signal.addEventListener("abort", () => {
           console.log("SSE connection closed");
-          eventEmitter.off(`newMessage:${lottieId}`, onNewMessage);
+          eventEmitter.off(`updateLottie:${lottieId}`, onLottieUpdate);
           controller.close();
         });
       },

@@ -1,20 +1,37 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import Collapse from "./Collapse";
 import Input from "./Input";
 import ColorInput from "./ColorInput";
 import { useForm, Controller, useWatch } from "react-hook-form";
 import { lottieColorToHEX, HEXToLottieColor } from "~/utils/colorUtils";
+import _ from "lodash";
 
-const LottieEditor = ({ data, onUpdate }) => {
-  const dataObj = JSON.parse(data || "{}");
-  const { control, setValue } = useForm({ defaultValues: dataObj });
+type LottieEditorProps = {
+  data: {};
+  onUpdate?: (data: any) => void;
+};
+
+const LottieEditor: React.FC<LottieEditorProps> = ({ data, onUpdate }) => {
+  const { control, setValue, reset } = useForm({ defaultValues: data });
   const watchedValues = useWatch({ control });
+  const isResetting = useRef(false);
 
   useEffect(() => {
-    if (onUpdate) {
-      onUpdate(JSON.stringify(watchedValues, null, 2));
+    // Indicate that the form is resetting
+    isResetting.current = true;
+    // Update the form values without triggering onUpdate
+    reset(data);
+  }, [data, reset]);
+
+  useEffect(() => {
+    if (isResetting.current) {
+      // Skip the first onUpdate call after resetting
+      console.log("Skipping onUpdate");
+      isResetting.current = false;
+    } else if (onUpdate && !_.isEqual(watchedValues, data)) {
+      onUpdate(watchedValues);
     }
-  }, [watchedValues, onUpdate]);
+  }, [watchedValues, onUpdate, data]);
 
   const renderInputField = (name, label, type = "text", min, max) => (
     <Controller
@@ -82,7 +99,6 @@ const LottieEditor = ({ data, onUpdate }) => {
 
   return (
     <div>
-      {renderInputField("nm", "Name")}
       {renderInputField("fr", "Frames (speed)", "number", 1, 1024)}
       {watchedValues.layers?.map((layer, layerIndex) => (
         <Collapse title={layer.nm} key={layerIndex}>
