@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from "react";
-import { ActionFunction, LoaderFunction, json } from "@remix-run/node";
-import { useLoaderData, Outlet } from "@remix-run/react";
+import React, { useEffect, useState } from 'react';
+import { ActionFunction, LoaderFunction, json } from '@remix-run/node';
+import { useLoaderData, Outlet } from '@remix-run/react';
 
-import { prisma } from "~/.server/db";
-import { authenticator } from "~/.server/auth";
-import { Lottie } from "@prisma/client";
-import Card from "~/components/Card";
-import LottiePlayerWithControls from "~/components/LottiePlayerWithControls";
-import LottieEditor from "~/components/LottieEditor";
-import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher";
-import eventEmitter from "~/.server/eventEmitter";
-import _ from "lodash";
+import { prisma } from '~/.server/db';
+import { authenticator } from '~/.server/auth';
+import { Lottie } from '@prisma/client';
+import Card from '~/components/Card';
+import LottiePlayerWithControls from '~/components/LottiePlayerWithControls';
+import LottieEditor from '~/components/LottieEditor';
+import { useDebounceFetcher } from 'remix-utils/use-debounce-fetcher';
+import eventEmitter from '~/.server/eventEmitter';
+import _ from 'lodash';
 
 type LoaderData = {
   lottie: Lottie;
@@ -18,7 +18,7 @@ type LoaderData = {
 
 export let loader: LoaderFunction = async ({ request, params }) => {
   let user = await authenticator.isAuthenticated(request, {
-    failureRedirect: "/login",
+    failureRedirect: '/login',
   });
 
   const lottie = await prisma.lottie.findUnique({
@@ -27,23 +27,23 @@ export let loader: LoaderFunction = async ({ request, params }) => {
   });
 
   if (!lottie) {
-    throw new Response("Lottie not found", { status: 404 });
+    throw new Response('Lottie not found', { status: 404 });
   }
 
   return json({ lottie });
 };
 
 export let action: ActionFunction = async ({ request, params }) => {
-  console.log("ACTION");
+  console.log('ACTION');
   let user = await authenticator.isAuthenticated(request, {
-    failureRedirect: "/login",
+    failureRedirect: '/login',
   });
 
   let formData = await request.formData();
-  let data = formData.get("data");
+  let data = formData.get('data');
 
-  if (typeof data !== "string") {
-    return json({ error: "Invalid form data" }, { status: 400 });
+  if (typeof data !== 'string') {
+    return json({ error: 'Invalid form data' }, { status: 400 });
   }
 
   try {
@@ -54,7 +54,7 @@ export let action: ActionFunction = async ({ request, params }) => {
     eventEmitter.emit(`updateLottie:${params.lottieId}`);
   } catch (error) {
     console.log(error);
-    return json({ error: "Error updating" }, { status: 400 });
+    return json({ error: 'Error updating' }, { status: 400 });
   }
 
   return json({ ok: true });
@@ -92,7 +92,7 @@ export default function SingleLottie() {
         fetcher.submit(
           { data: JSON.stringify(newData) },
           {
-            method: "post",
+            method: 'post',
             action: `/edit/${lottie.id}`,
             debounceTimeout: 1000,
           }

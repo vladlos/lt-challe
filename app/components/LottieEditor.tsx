@@ -1,10 +1,10 @@
-import React, { useEffect, useRef } from "react";
-import Collapse from "./Collapse";
-import Input from "./Input";
-import ColorInput from "./ColorInput";
-import { useForm, Controller, useWatch } from "react-hook-form";
-import { lottieColorToHEX, HEXToLottieColor } from "~/utils/colorUtils";
-import _ from "lodash";
+import React, { useEffect, useRef } from 'react';
+import Collapse from './Collapse';
+import Input from './Input';
+import ColorInput from './ColorInput';
+import { useForm, Controller, useWatch } from 'react-hook-form';
+import { lottieColorToHEX, HEXToLottieColor } from '~/utils/colorUtils';
+import _ from 'lodash';
 
 type LottieEditorProps = {
   data: {};
@@ -47,7 +47,7 @@ const LottieEditor: React.FC<LottieEditorProps> = ({ data, onUpdate }) => {
           onChange={(e) =>
             setValue(
               field.name,
-              type === "number"
+              type === 'number'
                 ? parseFloat(e.target.value) || 1
                 : e.target.value
             )
@@ -80,7 +80,7 @@ const LottieEditor: React.FC<LottieEditorProps> = ({ data, onUpdate }) => {
         (item.c || item.it) && (
           <Collapse title={item.nm || `Item ${index}`} key={itemPath}>
             {item.c && (
-              <>{renderColorInputField(`${itemPath}.c.k`, "Item Color")}</>
+              <>{renderColorInputField(`${itemPath}.c.k`, 'Item Color')}</>
             )}
             {item.it && renderItems(item.it, `${itemPath}.it`)}
           </Collapse>
@@ -98,7 +98,7 @@ const LottieEditor: React.FC<LottieEditorProps> = ({ data, onUpdate }) => {
 
   return (
     <div>
-      {renderInputField("fr", "Frames (speed)", "number", 1, 1024)}
+      {renderInputField('fr', 'Frames (speed)', 'number', 1, 1024)}
       {watchedValues.layers?.map((layer, layerIndex) => (
         <Collapse title={layer.nm} key={layerIndex}>
           {renderLayerShapes(layer, layerIndex)}

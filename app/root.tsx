@@ -5,16 +5,16 @@ import {
   Scripts,
   ScrollRestoration,
   useLoaderData,
-} from "@remix-run/react";
+} from '@remix-run/react';
 
-import type { LinksFunction, LoaderFunction } from "@remix-run/node";
-import stylesheet from "~/tailwind.css?url";
-import { authenticator } from "./.server/auth";
-import Navbar from "./components/Navbar";
-import { User } from "@prisma/client";
+import type { LinksFunction, LoaderFunction } from '@remix-run/node';
+import stylesheet from '~/tailwind.css?url';
+import { authenticator } from './.server/auth';
+import Navbar from './components/Navbar';
+import { User } from '@prisma/client';
 
 export const links: LinksFunction = () => [
-  { rel: "stylesheet", href: stylesheet },
+  { rel: 'stylesheet', href: stylesheet },
 ];
 
 export const loader: LoaderFunction = async ({ request }) => {

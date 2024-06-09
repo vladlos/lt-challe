@@ -1,6 +1,6 @@
-import React from "react";
-import Card from "./Card";
-import { format } from "date-fns";
+import React from 'react';
+import Card from './Card';
+import { format } from 'date-fns';
 
 interface LottieCardProps {
   name: string;
@@ -15,7 +15,7 @@ const LottieCard: React.FC<LottieCardProps> = ({
   createdAt,
   children,
   action,
-  owner = "Anonymous",
+  owner = 'Anonymous',
 }) => {
   return (
     <Card className="w-[350px]">
@@ -26,7 +26,7 @@ const LottieCard: React.FC<LottieCardProps> = ({
       <div className="h-40">{children}</div>
       <div className="flex justify-between items-center">
         <span className="text-sm text-gray-500">
-          Created at: {format(new Date(createdAt), "MM/dd/yyyy")}
+          Created at: {format(new Date(createdAt), 'MM/dd/yyyy')}
         </span>
         {action && <div>{action}</div>}
       </div>

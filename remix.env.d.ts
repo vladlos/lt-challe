@@ -1,3 +1,3 @@
 interface Window {
-    __APOLLO_STATE__: any
+  __APOLLO_STATE__: any;
 }

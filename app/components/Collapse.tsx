@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
 interface CollapseProps {
   title: string;
@@ -32,7 +32,7 @@ const Collapse: React.FC<CollapseProps> = ({ title, children }) => {
         <h2 className="text-sm lowercase font-mono">{title}</h2>
         <svg
           className={`w-6 h-6 transition-transform ${
-            isOpen ? "transform rotate-180" : ""
+            isOpen ? 'transform rotate-180' : ''
           }`}
           viewBox="0 0 24 24"
           fill="none"

@@ -1,6 +1,6 @@
-import React from "react";
-import { Link } from "@remix-run/react";
-import { Lottie } from "@prisma/client";
+import React from 'react';
+import { Link } from '@remix-run/react';
+import { Lottie } from '@prisma/client';
 
 type LottieListProps = {
   lotties: Lottie[];

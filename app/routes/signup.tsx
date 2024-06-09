@@ -1,26 +1,26 @@
-import { ActionFunction, redirect } from "@remix-run/node";
-import { useActionData, Form } from "@remix-run/react";
+import { ActionFunction, redirect } from '@remix-run/node';
+import { useActionData, Form } from '@remix-run/react';
 
-import { registerUser } from "~/.server/auth";
-import Button from "~/components/Button";
-import Card from "~/components/Card";
-import Input from "~/components/Input";
+import { registerUser } from '~/.server/auth';
+import Button from '~/components/Button';
+import Card from '~/components/Card';
+import Input from '~/components/Input';
 
 export let action: ActionFunction = async ({ request }) => {
   let formData = await request.formData();
-  let email = formData.get("email");
-  let password = formData.get("password");
+  let email = formData.get('email');
+  let password = formData.get('password');
 
-  if (typeof email !== "string" || typeof password !== "string") {
-    return { error: "Invalid form submission" };
+  if (typeof email !== 'string' || typeof password !== 'string') {
+    return { error: 'Invalid form submission' };
   }
 
   try {
     await registerUser(email, password);
-    return redirect("/login");
+    return redirect('/login');
   } catch (error) {
     console.error(error);
-    return { error: "Error creating user" };
+    return { error: 'Error creating user' };
   }
 };
 

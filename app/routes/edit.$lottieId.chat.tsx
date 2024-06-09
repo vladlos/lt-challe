@@ -1,24 +1,24 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from 'react';
 import {
   ActionFunction,
   LoaderFunction,
   json,
   redirect,
-} from "@remix-run/node";
+} from '@remix-run/node';
 import {
   Form,
   useActionData,
   useLoaderData,
   useParams,
-} from "@remix-run/react";
-import { prisma } from "~/.server/db";
-import eventEmitter from "~/.server/eventEmitter";
-import { authenticator } from "~/.server/auth";
+} from '@remix-run/react';
+import { prisma } from '~/.server/db';
+import eventEmitter from '~/.server/eventEmitter';
+import { authenticator } from '~/.server/auth';
 
-import Button from "~/components/Button";
-import Input from "~/components/Input";
-import { Message } from "@prisma/client";
-import { format } from "date-fns";
+import Button from '~/components/Button';
+import Input from '~/components/Input';
+import { Message } from '@prisma/client';
+import { format } from 'date-fns';
 
 type LoaderData = {
   messages: Message[];
@@ -26,7 +26,7 @@ type LoaderData = {
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const user = await authenticator.isAuthenticated(request, {
-    failureRedirect: "/login",
+    failureRedirect: '/login',
   });
 
   let chat = await prisma.chat.findUnique({
@@ -34,7 +34,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     include: {
       messages: {
         include: { user: true },
-        orderBy: { createdAt: "desc" },
+        orderBy: { createdAt: 'desc' },
       },
     },
   });
@@ -48,7 +48,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       include: {
         messages: {
           include: { user: true },
-          orderBy: { createdAt: "desc" },
+          orderBy: { createdAt: 'desc' },
         },
       },
     });
@@ -63,7 +63,7 @@ type ActionData = {
 
 export const action: ActionFunction = async ({ request, params }) => {
   const user = await authenticator.isAuthenticated(request, {
-    failureRedirect: "/login",
+    failureRedirect: '/login',
   });
 
   const lottieId = params.lottieId;
@@ -72,10 +72,10 @@ export const action: ActionFunction = async ({ request, params }) => {
   });
 
   const formData = await request.formData();
-  const content = formData.get("message");
+  const content = formData.get('message');
 
-  if (typeof content !== "string") {
-    return json({ error: "Invalid form data" }, { status: 400 });
+  if (typeof content !== 'string') {
+    return json({ error: 'Invalid form data' }, { status: 400 });
   }
 
   const newMessage = await prisma.message.create({
@@ -131,8 +131,8 @@ export default function Chat() {
         {messages.map((message) => (
           <div className="bg-gray-100 rounded-md mt-2 p-2" key={message.id}>
             <div className="text-gray-500 text-sm">
-              {message.user.email} at{" "}
-              {format(new Date(message.createdAt), "MM/dd/yyyy hh:mm")}
+              {message.user.email} at{' '}
+              {format(new Date(message.createdAt), 'MM/dd/yyyy hh:mm')}
             </div>
             {message.content}
           </div>

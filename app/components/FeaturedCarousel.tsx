@@ -1,10 +1,10 @@
-import { Form } from "@remix-run/react";
-import Carousel from "./Carousel";
-import { useQuery } from "@apollo/client/react/hooks/useQuery";
-import { gql } from "@apollo/client/core";
-import LottieCard from "./LottieCard";
-import Button from "./Button";
-import { ArrowUpOnSquareStackIcon } from "@heroicons/react/24/outline";
+import { Form } from '@remix-run/react';
+import Carousel from './Carousel';
+import { useQuery } from '@apollo/client/react/hooks/useQuery';
+import { gql } from '@apollo/client/core';
+import LottieCard from './LottieCard';
+import Button from './Button';
+import { ArrowUpOnSquareStackIcon } from '@heroicons/react/24/outline';
 
 const GET_FEATURED_ANIMATIONS = gql`
   query FeaturedPublicAnimations($first: Int, $after: String) {
@@ -42,7 +42,7 @@ export default function FeaturedCarousel() {
 
   const loadMoreFeatured = () => {
     const { hasNextPage, endCursor } = data.featuredPublicAnimations.pageInfo;
-    console.log("Loading more featured animations, hasNextPage:", hasNextPage);
+    console.log('Loading more featured animations, hasNextPage:', hasNextPage);
     if (hasNextPage) {
       fetchMore({
         variables: {

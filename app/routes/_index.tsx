@@ -1,16 +1,16 @@
-import { useState } from "react";
-import { LoaderFunction, json } from "@remix-run/node";
-import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import { useState } from 'react';
+import { LoaderFunction, json } from '@remix-run/node';
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
-import { Link, useLoaderData } from "@remix-run/react";
-import { prisma } from "~/.server/db";
+import { Link, useLoaderData } from '@remix-run/react';
+import { prisma } from '~/.server/db';
 
-import Carousel from "~/components/Carousel";
-import { Lottie } from "@prisma/client";
-import LottieCard from "~/components/LottieCard";
-import FeaturedCarousel from "~/components/FeaturedCarousel";
-import Button from "~/components/Button";
-import { AdjustmentsVerticalIcon } from "@heroicons/react/24/outline";
+import Carousel from '~/components/Carousel';
+import { Lottie } from '@prisma/client';
+import LottieCard from '~/components/LottieCard';
+import FeaturedCarousel from '~/components/FeaturedCarousel';
+import Button from '~/components/Button';
+import { AdjustmentsVerticalIcon } from '@heroicons/react/24/outline';
 
 type LoaderData = {
   initialLotties: Lottie[];
@@ -18,7 +18,7 @@ type LoaderData = {
 
 export let loader: LoaderFunction = async () => {
   let lotties = await prisma.lottie.findMany({
-    orderBy: { createdAt: "desc" },
+    orderBy: { createdAt: 'desc' },
     take: 5,
     include: {
       user: true,
@@ -44,7 +44,7 @@ export default function Index() {
     <div>
       <h1 className="text-2xl font-bold my-6">Latest Lotties</h1>
       <Carousel
-        id={"latest-lotties"}
+        id={'latest-lotties'}
         items={lotties.map((lottie) => (
           <LottieCard
             name={lottie.name}

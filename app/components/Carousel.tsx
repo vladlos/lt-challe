@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect } from "react";
+import React, { ReactElement, useEffect } from 'react';
 
 type CarouselProps = {
   items: ReactElement[];
@@ -17,7 +17,7 @@ const Carousel: React.FC<CarouselProps> = ({ items, loadMore, id }) => {
       { threshold: 1.0 }
     );
 
-    let sentinel = document.querySelector("#" + id);
+    let sentinel = document.querySelector('#' + id);
     if (sentinel) {
       observer.observe(sentinel);
     }

@@ -4,19 +4,19 @@
  * For more information, see https://remix.run/file-conventions/entry.server
  */
 
-import { PassThrough } from "node:stream";
+import { PassThrough } from 'node:stream';
 
-import type { AppLoadContext, EntryContext } from "@remix-run/node";
-import { createReadableStreamFromReadable } from "@remix-run/node";
-import { sessionStorage } from "~/.server/session";
-import { RemixServer } from "@remix-run/react";
-import { isbot } from "isbot";
-import { renderToPipeableStream } from "react-dom/server";
+import type { AppLoadContext, EntryContext } from '@remix-run/node';
+import { createReadableStreamFromReadable } from '@remix-run/node';
+import { sessionStorage } from '~/.server/session';
+import { RemixServer } from '@remix-run/react';
+import { isbot } from 'isbot';
+import { renderToPipeableStream } from 'react-dom/server';
 
-import { ReactElement } from "react";
+import { ReactElement } from 'react';
 
-import { default as pkg } from "@apollo/client";
-import { getDataFromTree } from "@apollo/client/react/ssr";
+import { default as pkg } from '@apollo/client';
+import { getDataFromTree } from '@apollo/client/react/ssr';
 const { ApolloClient, ApolloProvider, InMemoryCache, createHttpLink } = pkg;
 
 const ABORT_DELAY = 5_000;
@@ -31,9 +31,9 @@ export default async function handleRequest(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   loadContext: AppLoadContext
 ) {
-  let session = await sessionStorage.getSession(request.headers.get("Cookie"));
+  let session = await sessionStorage.getSession(request.headers.get('Cookie'));
 
-  return isbot(request.headers.get("user-agent") || "")
+  return isbot(request.headers.get('user-agent') || '')
     ? handleBotRequest(
         request,
         responseStatusCode,
@@ -69,7 +69,7 @@ function handleBotRequest(
           const body = new PassThrough();
           const stream = createReadableStreamFromReadable(body);
 
-          responseHeaders.set("Content-Type", "text/html");
+          responseHeaders.set('Content-Type', 'text/html');
 
           resolve(
             new Response(stream, {
@@ -124,7 +124,7 @@ function handleBrowserRequest(
           const body = new PassThrough();
           const stream = createReadableStreamFromReadable(body);
 
-          responseHeaders.set("Content-Type", "text/html");
+          responseHeaders.set('Content-Type', 'text/html');
 
           resolve(
             new Response(stream, {
@@ -172,7 +172,7 @@ async function wrapRemixServerWithApollo(
         dangerouslySetInnerHTML={{
           __html: `window.__APOLLO_STATE__=${JSON.stringify(
             initialState
-          ).replace(/</g, "\\u003c")}`, // The replace call escapes the < character to prevent cross-site scripting attacks that are possible via the presence of </script> in a string literal
+          ).replace(/</g, '\\u003c')}`, // The replace call escapes the < character to prevent cross-site scripting attacks that are possible via the presence of </script> in a string literal
         }}
       />
     </>
@@ -189,7 +189,7 @@ async function getApolloClient(request: Request) {
       headers: {
         ...Object.fromEntries(request.headers),
       },
-      credentials: request.credentials ?? "include", // or "same-origin" if your backend server is the same domain
+      credentials: request.credentials ?? 'include', // or "same-origin" if your backend server is the same domain
     }),
   });
   return client;

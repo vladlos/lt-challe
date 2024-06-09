@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { DotLottieReact } from "@lottiefiles/dotlottie-react";
-import Input from "~/components/Input";
-import Button from "~/components/Button";
-import ColorInput from "~/components/ColorInput";
-import CodeBlock from "~/components/CodeBlock";
+import React, { useEffect, useState } from 'react';
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+import Input from '~/components/Input';
+import Button from '~/components/Button';
+import ColorInput from '~/components/ColorInput';
+import CodeBlock from '~/components/CodeBlock';
 
 const LottiePlayerWithControls: React.FC<{ data: string }> = ({ data }) => {
   const [dotLottie, setDotLottie] = useState<null | any>(null);
 
   const [speed, setSpeed] = useState(1);
-  const [color, setColor] = useState("#ffffff");
+  const [color, setColor] = useState('#ffffff');
   const [isPlaying, setIsPlaying] = useState(false);
 
   const dotLottieRefCallback = (dotLottie: any) => {
@@ -38,16 +38,16 @@ const LottiePlayerWithControls: React.FC<{ data: string }> = ({ data }) => {
     }
 
     if (dotLottie) {
-      dotLottie.addEventListener("play", onPlay);
-      dotLottie.addEventListener("pause", onPause);
-      dotLottie.addEventListener("stop", onPause);
+      dotLottie.addEventListener('play', onPlay);
+      dotLottie.addEventListener('pause', onPause);
+      dotLottie.addEventListener('stop', onPause);
     }
 
     return () => {
       if (dotLottie) {
-        dotLottie.addEventListener("play", onPlay);
-        dotLottie.addEventListener("pause", onPause);
-        dotLottie.addEventListener("stop", onPause);
+        dotLottie.addEventListener('play', onPlay);
+        dotLottie.addEventListener('pause', onPause);
+        dotLottie.addEventListener('stop', onPause);
       }
     };
   }, [dotLottie]);

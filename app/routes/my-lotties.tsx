@@ -1,18 +1,18 @@
-import React from "react";
+import React from 'react';
 import {
   json,
   LoaderFunction,
   ActionFunction,
   redirect,
-} from "@remix-run/node";
-import { useLoaderData, Form, useActionData } from "@remix-run/react";
-import { prisma } from "~/.server/db";
-import { authenticator } from "~/.server/auth";
-import LottieList from "~/components/LottieList";
-import Button from "~/components/Button";
-import Input from "~/components/Input";
-import { Lottie } from "@prisma/client";
-import Textarea from "~/components/Textarea";
+} from '@remix-run/node';
+import { useLoaderData, Form, useActionData } from '@remix-run/react';
+import { prisma } from '~/.server/db';
+import { authenticator } from '~/.server/auth';
+import LottieList from '~/components/LottieList';
+import Button from '~/components/Button';
+import Input from '~/components/Input';
+import { Lottie } from '@prisma/client';
+import Textarea from '~/components/Textarea';
 
 type LoaderData = {
   user: { email: string };
@@ -21,7 +21,7 @@ type LoaderData = {
 
 export const loader: LoaderFunction = async ({ request }) => {
   const user = await authenticator.isAuthenticated(request, {
-    failureRedirect: "/login",
+    failureRedirect: '/login',
   });
   const lotties = await prisma.lottie.findMany({
     where: { userId: user.id },
@@ -32,18 +32,18 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export const action: ActionFunction = async ({ request }) => {
   const user = await authenticator.isAuthenticated(request, {
-    failureRedirect: "/login",
+    failureRedirect: '/login',
   });
   const formData = await request.formData();
-  const action = formData.get("action");
+  const action = formData.get('action');
 
   try {
-    if (action === "create") {
-      const name = formData.get("name");
-      const data = formData.get("data");
+    if (action === 'create') {
+      const name = formData.get('name');
+      const data = formData.get('data');
 
-      if (typeof name !== "string" || typeof data !== "string") {
-        return json({ error: "Invalid form submission" }, { status: 400 });
+      if (typeof name !== 'string' || typeof data !== 'string') {
+        return json({ error: 'Invalid form submission' }, { status: 400 });
       }
       await prisma.lottie.create({
         data: {
@@ -52,10 +52,10 @@ export const action: ActionFunction = async ({ request }) => {
           userId: user.id,
         },
       });
-    } else if (action === "delete") {
-      const lottieId = formData.get("lottieId");
-      if (typeof lottieId !== "string") {
-        return json({ error: "Invalid form submission" }, { status: 400 });
+    } else if (action === 'delete') {
+      const lottieId = formData.get('lottieId');
+      if (typeof lottieId !== 'string') {
+        return json({ error: 'Invalid form submission' }, { status: 400 });
       }
 
       await prisma.lottie.delete({
@@ -64,13 +64,13 @@ export const action: ActionFunction = async ({ request }) => {
         },
       });
     } else {
-      return json({ error: "Invalid action" }, { status: 400 });
+      return json({ error: 'Invalid action' }, { status: 400 });
     }
-    return redirect("/my-lotties");
+    return redirect('/my-lotties');
   } catch (error) {
     console.error(error);
     return json(
-      { error: "Failed to save/delete Lottie data" },
+      { error: 'Failed to save/delete Lottie data' },
       { status: 500 }
     );
   }
