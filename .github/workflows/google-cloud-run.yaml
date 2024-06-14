@@ -7,6 +7,7 @@ on:
 
 env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  REGION: 'europe-west1'
 
 jobs:
   build-deploy:
@@ -28,6 +29,7 @@ jobs:
       - name: Deploy to Cloud Run
         run: |
           gcloud run deploy lottie-challenge \
-          --region europe-west1 \
+          --region ${{ env.REGION }} \
           --source . \
-          --allow-unauthenticated
+          --allow-unauthenticated \
+          --set-env-vars NODE_ENV=production,DATABASE_URL=${{ secrets.DATABASE_URL }},GRAPQL_URL=${{ secrets.GRAPQL_URL }}

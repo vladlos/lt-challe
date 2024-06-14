@@ -19,11 +19,16 @@ export const links: LinksFunction = () => [
 
 export const loader: LoaderFunction = async ({ request }) => {
   const user = await authenticator.isAuthenticated(request);
-  return { user };
+  return {
+    user,
+    ENV: {
+      GRAPQL_URL: process.env.GRAPQL_URL,
+    },
+  };
 };
 
 export function Layout({ children }: { children: React.ReactNode }) {
-  const { user } = useLoaderData<{ user: User }>();
+  const { user, ENV } = useLoaderData<{ user: User; ENV: {} }>();
   return (
     <html lang="en">
       <head>
@@ -38,6 +43,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
           <div className="container mx-auto min-h-fit">{children}</div>
         </div>
         <ScrollRestoration />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.ENV = ${JSON.stringify(ENV)}`,
+          }}
+        />
         <Scripts />
       </body>
     </html>

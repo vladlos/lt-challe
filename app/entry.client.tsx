@@ -12,7 +12,7 @@ import { hydrateRoot } from 'react-dom/client';
 startTransition(() => {
   const client = new ApolloClient({
     cache: new InMemoryCache().restore(window.__APOLLO_STATE__),
-    uri: 'https://graphql.lottiefiles.com',
+    uri: window.ENV.GRAPQL_URL,
   });
 
   hydrateRoot(

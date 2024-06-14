@@ -40,7 +40,7 @@ Real time functionality done with SSE.
 
 There is a bunch of thing I would like to improve. Next steps in priority order, if it was a real app:
 
- - hide db user pass via env secret
  - test coverage
+ - improve TS coverage (some corners were cut due to time constrains)
  - maybe moving work with db in separate module instead of scattering this code in loader\action.
  - improve mobile layouts
